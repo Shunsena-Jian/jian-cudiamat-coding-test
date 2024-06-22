@@ -14,6 +14,7 @@ class products extends Model
         'product_name',
         'product_desc',
         'product_price',
+        'product_owner',
         'created_at',
         'updated_at'
     ];
