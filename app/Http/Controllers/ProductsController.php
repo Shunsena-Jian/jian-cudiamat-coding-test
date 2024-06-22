@@ -37,6 +37,9 @@ class ProductsController extends Controller
             $email = auth()->user()->email;
             $products = $this->productInterface->addProduct($request, $email);
 
+            $cacheKey = 'owned_products_' . auth()->user()->id;
+            Cache::forget($cacheKey);
+
             if ($products) {
                 return response()->json([
                     'status_code' => 200
@@ -96,6 +99,9 @@ class ProductsController extends Controller
 
             $product = $this->productInterface->editProduct($request);
 
+            $cacheKey = 'owned_products_' . auth()->user()->id;
+            Cache::forget($cacheKey);
+
             if ($product == 200) {
                 return response()->json([
                     'status_code' => 200
@@ -115,6 +121,9 @@ class ProductsController extends Controller
     {
         try{
             $product = $this->productInterface->deleteProduct($request);
+
+            $cacheKey = 'owned_products_' . auth()->user()->id;
+            Cache::forget($cacheKey);
 
             if($product == 200){
                 return response()->json([
