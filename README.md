@@ -23,6 +23,7 @@
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#installation">Installation</a></li>
+        <li><a href="#installation">How to run Application</a></li>
       </ul>
     </li>
     <li>
@@ -89,6 +90,34 @@ Others:
 * Create a new repository under your account named `{FIRST NAME}-{LAST NAME}-coding-test`. (e.g. `john-doe-coding-test`)
 * Push your code to the new repository.
 
+### How to run Application
+* Follow the instructions after cloning the project.
+#### Execute the following commands:
+1. composer update
+2. composer require laravel/ui
+3. php artisan ui bootstrap
+4. npm install
+5. composer require yajra/laravel-datatables-oracle:"^10.0"
+
+#### Create the .env file
+1. Copy contents from .env.example
+2. Setup your database, db username, and db password
+
+#### Start the System:
+1. Open 2 terminals
+2. php artisan serve (On the first terminal)
+3. npm run dev (On the second terminal)
+
+#### Setup App Key
+1. When you first start the system, generate an app key first.
+2. Refresh the page
+
+#### Run the migrations
+* php artisan migrate
+
+#### Run the seeder for the roles
+* php artisan db:seed --class=RoleSeeder
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- BONUS POINTS -->
@@ -105,4 +134,7 @@ Others:
 Q: The management requested a new feature where in the fictional e-commerce app must have a "featured products" section.
 How would you go about implementing this feature in the backend?
 
-A: _Put your answer here_
+A: Since the products are featured, I would implement it in a way where
+the featured products will be the very first thing that the consumer will
+see on the page. At the same time make the design on the featured products
+to be alluring.
