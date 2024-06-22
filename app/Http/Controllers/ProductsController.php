@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Cache;
 
 class ProductsController extends Controller
 {
@@ -52,24 +53,29 @@ class ProductsController extends Controller
 
     public function viewProductDetails(Request $request)
     {
-        try{
-            $product = $this->productInterface->viewProductDetails($request);
+        $cacheKey = 'product_details_' . $request->product_id;
 
-            if ($product) {
-                return response()->json([
-                    'status_code' => 200,
-                    'product' => $product
-                ]);
-            } else {
-                return response()->json([
-                    'status_code' => 400
-                ]);
+        return Cache::remember($cacheKey, 60, function () use ($request) {
+            try {
+                $product = $this->productInterface->viewProductDetails($request);
+
+                if ($product) {
+                    return response()->json([
+                        'status_code' => 200,
+                        'product' => $product
+                    ]);
+                } else {
+                    return response()->json([
+                        'status_code' => 400
+                    ]);
+                }
+
+            } catch (Exception $e) {
+                return back()->with('failed', $e->getMessage());
             }
-
-        }catch(Exception $e){
-            return back()->with('failed', $e->getMessage());
-        }
+        });
     }
+
 
     public function editProduct(Request $request)
     {
@@ -126,15 +132,20 @@ class ProductsController extends Controller
 
     public function retrieveOwnedProducts()
     {
-        try{
-            $email = auth()->user()->email;
-            $products = $this->productInterface->retrieveOwnedProducts($email);
+        $cacheKey = 'owned_products_' . auth()->user()->id;
 
-            if($products){
-                return DataTables::of($products)->make(true);
+        return Cache::remember($cacheKey, 60, function () {
+            try {
+                $email = auth()->user()->email;
+                $products = $this->productInterface->retrieveOwnedProducts($email);
+
+                if ($products) {
+                    return DataTables::of($products)->make(true);
+                }
+            } catch (Exception $e) {
+                return back()->with('failed', $e->getMessage());
             }
-        }catch(Exception $e){
-            return back()->with('failed', $e->getMessage());
-        }
+        });
     }
+
 }
